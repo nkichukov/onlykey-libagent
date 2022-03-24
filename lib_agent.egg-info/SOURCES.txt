@@ -9,9 +9,12 @@ libagent/__init__.py
 libagent/formats.py
 libagent/server.py
 libagent/util.py
+libagent/age/__init__.py
+libagent/age/client.py
 libagent/device/__init__.py
 libagent/device/fake_device.py
 libagent/device/interface.py
+libagent/device/jade.py
 libagent/device/keepkey.py
 libagent/device/keepkey_defs.py
 libagent/device/ledger.py

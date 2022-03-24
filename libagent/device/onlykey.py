@@ -1,3 +1,5 @@
+# pylint: disable=too-many-locals,too-many-statements,too-many-branches
+# pylint: disable=attribute-defined-outside-init
 """OnlyKey-related code (see https://www.onlykey.io/)."""
 
 import logging
@@ -177,7 +179,6 @@ class OnlyKey(interface.Device):
             log.info('received= %s', repr(ok_pubkey))
             if ok_pubkey[:5] == [69, 114, 114, 111, 114]:
                 raise interface.DeviceError("".join([chr(value) for value in ok_pubkey]))
-
             if len(set(ok_pubkey[34:63])) == 1:
                 if curve_name in ('nist256p1', 'secp256k1'):
                     raise interface.DeviceError("Public key curve does not match requested type")
@@ -307,7 +308,6 @@ class OnlyKey(interface.Device):
         d = h2.digest()
         assert len(d) == 32
         b1, b2, b3 = get_button(self, d[0]), get_button(self, d[15]), get_button(self, d[31])
-
         log.info('Key Slot =%s', this_slot_id)
         print('Enter the 3 digit challenge code on OnlyKey to authorize '+identity.to_string())
         print('{} {} {}'.format(b1, b2, b3))
@@ -356,6 +356,15 @@ class OnlyKey(interface.Device):
             log.info('received= %s', repr(result))
             return bytes(result)
         raise Exception('failed to sign challenge')
+
+    def ecdh_with_pubkey(self, identity, pubkey):
+        """Get shared session key using Elliptic Curve Diffie-Hellman & self public key."""
+        self_pubkey = self.pubkey(ecdh=False, identity=identity)
+        log.info('Using self_pubkey= %s', self_pubkey)
+        session_key = self.ecdh(identity, pubkey)
+        if self_pubkey:
+            self_pubkey = self_pubkey
+        return session_key, self_pubkey
 
     def ecdh(self, identity, pubkey):
         """Get shared session key using Elliptic Curve Diffie-Hellman."""

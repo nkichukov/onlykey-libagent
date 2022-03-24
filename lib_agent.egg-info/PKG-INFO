@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: lib-agent
-Version: 1.0.3
+Version: 1.0.4
 Summary: Using OnlyKey as hardware SSH and GPG agent
 Home-page: http://github.com/onlykey/onlykey-agent
 Author: CryptoTrust
